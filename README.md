@@ -1,1 +1,1 @@
-# IgorBaran_internship_practice
+#Igor Baran DevOps course project
