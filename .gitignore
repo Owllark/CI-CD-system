@@ -1,0 +1,8 @@
+*.tfvars
+*.tfstate
+*.tfstate.*
+*.lock.*
+.terraform/
+.idea
+.vs
+deploy\hashicorp_vault\packer\variables.json

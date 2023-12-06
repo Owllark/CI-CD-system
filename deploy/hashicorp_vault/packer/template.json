@@ -1,0 +1,24 @@
+{
+    
+    "builders": [{
+        "type": "digitalocean",
+        "api_token": "{{user `do_token`}}",
+        "image": "{{user `base_system_image`}}",
+        "region": "{{user `region`}}",
+        "size": "{{user `size`}}",
+        "ssh_username": "root"
+    }],
+    "provisioners": [{
+        "type": "shell",
+        "inline": [
+            "sleep 30",
+            "sudo apt-get update",
+            "sudo apt-get install unzip -y",
+            "curl -L https://releases.hashicorp.com/vault/1.15.3/vault_1.15.3_linux_amd64.zip -o vault.zip",
+            "unzip vault.zip",
+            "sudo chown root:root vault",
+            "mv vault /usr/local/bin/",
+            "rm -f vault.zip"
+        ]
+   }]
+}
