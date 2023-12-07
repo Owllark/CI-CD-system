@@ -14,7 +14,7 @@ variable "k8s_clustername" {
 }
 
 variable "k8s_version" {
-  default = "1.19.3-do.3"
+  default = "1.28.2-do.0"
 }
 
 variable "k8s_poolname" {

@@ -1,3 +1,3 @@
-data "vault_generic_secret" "do_token" {
-  path = "secret/do/token"
+data "vault_generic_secret" "secrets" {
+  path = "kv/secrets"
 }

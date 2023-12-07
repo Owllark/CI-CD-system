@@ -7,9 +7,14 @@ terraform {
   }
 }
 
+provider "digitalocean" {
+   token = data.vault_generic_secret.secrets.data["do_token"]
+}
+
 provider "vault" {
   address = "${var.vault_address}"
   token   = "${var.vault_token}"
+  skip_child_token = true
 }
 
 resource "digitalocean_kubernetes_cluster" "kubernetes_cluster" {
