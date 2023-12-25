@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\igorbaran_devops_internship_practice\\app\\app\\aspnetcoreapp\\aspnetcoreapp.csproj",
+      "projectUniqueName": "D:\\igorbaran_devops_internship_practice\\app\\src\\aspnetcoreapp\\aspnetcoreapp.csproj",
       "projectName": "aspnetcoreapp",
-      "projectPath": "D:\\igorbaran_devops_internship_practice\\app\\app\\aspnetcoreapp\\aspnetcoreapp.csproj",
+      "projectPath": "D:\\igorbaran_devops_internship_practice\\app\\src\\aspnetcoreapp\\aspnetcoreapp.csproj",
       "packagesPath": "C:\\Users\\Повелитель мух\\.nuget\\packages\\",
-      "outputPath": "D:\\igorbaran_devops_internship_practice\\app\\app\\aspnetcoreapp\\obj\\",
+      "outputPath": "D:\\igorbaran_devops_internship_practice\\app\\src\\aspnetcoreapp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

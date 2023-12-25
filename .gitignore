@@ -6,3 +6,38 @@
 .idea
 .vs
 deploy\hashicorp_vault\packer\variables.json
+
+# Ignore Visual Studio files and directories
+.vs/
+*.suo
+*.user
+*.cache
+*.log
+*.log.*
+*.bak
+*.bak.*
+*.tmp
+
+# Ignore build and output directories
+bin/
+obj/
+
+# Ignore NuGet packages and lock files
+packages/
+*.nupkg
+*.lock.json
+
+# Ignore IDE and editor specific files
+.idea/
+.vscode/
+
+# Ignore user secrets (customize based on your setup)
+secrets.json
+
+# Ignore application configuration files (customize as needed)
+appsettings*.json
+
+app/test/node_modules/
+app/test/cypress.config.js
+app/test.package.json
+app/test/package-lock.json

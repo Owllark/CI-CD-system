@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4456D9FE-E151-4B80-A5A2-46DE34FD02C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aspnetcoreapp", "src\aspnetcoreapp\aspnetcoreapp.csproj", "{9ECBE66D-2C92-4C5B-BEDB-575039B9ACC5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{622E58E3-17E3-43A8-BDDD-AB2648291123}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "app.unittest", "test\app.unittest\app.unittest.csproj", "{FB1C898D-3C1A-4A69-90C9-47E88427F4A5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9ECBE66D-2C92-4C5B-BEDB-575039B9ACC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ECBE66D-2C92-4C5B-BEDB-575039B9ACC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ECBE66D-2C92-4C5B-BEDB-575039B9ACC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ECBE66D-2C92-4C5B-BEDB-575039B9ACC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB1C898D-3C1A-4A69-90C9-47E88427F4A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB1C898D-3C1A-4A69-90C9-47E88427F4A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB1C898D-3C1A-4A69-90C9-47E88427F4A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB1C898D-3C1A-4A69-90C9-47E88427F4A5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9ECBE66D-2C92-4C5B-BEDB-575039B9ACC5} = {4456D9FE-E151-4B80-A5A2-46DE34FD02C9}
+		{FB1C898D-3C1A-4A69-90C9-47E88427F4A5} = {622E58E3-17E3-43A8-BDDD-AB2648291123}
+	EndGlobalSection
+EndGlobal
