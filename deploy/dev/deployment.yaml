@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aspnet-app
+  labels:
+    app: aspnet-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aspnet-app
+  template:
+    metadata:
+      labels:
+        app: aspnet-app
+    spec:
+      containers:
+      - name: aspnet-container
+        image: owllark/webapp:latest
+        ports:
+        - containerPort: 80
+        imagePullSecrets:
+        - name: dockerhub-cred
