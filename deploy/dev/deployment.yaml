@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: aspnet-container
-        image: owllark/webapp:latest
+        image: owllark/webapp:126
         ports:
         - containerPort: 80
         imagePullSecrets:
