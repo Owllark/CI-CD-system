@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: aspnet-container
-        image: ${registry}:$BUILD_NUMBER
+        image: owllark/webapp:192
         ports:
         - containerPort: 80
         imagePullSecrets:
