@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: aspnet-container
-        image: $newImage
+        image: ${newImage}
         ports:
         - containerPort: 80
         imagePullSecrets:
