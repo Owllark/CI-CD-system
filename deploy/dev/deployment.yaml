@@ -20,5 +20,5 @@ spec:
         image: owllark/webapp:192
         ports:
         - containerPort: 80
-        imagePullSecrets:
-        - name: dockerhub-secret
+      imagePullSecrets:
+      - name: dockerhub-secret
