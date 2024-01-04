@@ -4,9 +4,9 @@ metadata:
   name: app-service
 spec:
   selector:
-    app: aspnet-app  # Label selector to match the Deployment
+    app: aspnet-app
   ports:
     - protocol: TCP
-      port: 80       # Port on the service
-      targetPort: 80 # Port your ASP.NET app is listening on in the pod
-  type: NodePort     # Exposes the service on a static port on each Node's IP
+      port: 80  
+      targetPort: 8080 
+  type: NodePort
