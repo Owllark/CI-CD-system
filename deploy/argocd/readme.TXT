@@ -10,5 +10,5 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 Retrieving initial admin password:
 kubectl get secret argocd-initial-admin-secret -n argocd  -o jsonpath="{.data.password}" | base64 --decode
 
-Applying ingress(accessible via elk.owllark.mooo.com):
+Applying ingress(accessible via argocd.owllark.mooo.com):
 kubectl apply -f argocd-ingress.yaml -n argocd

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: webapp
+spec:
+  destination:
+    name: ''
+    namespace: production
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: ./deploy/dev
+    repoURL: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git'
+    targetRevision: release
+    directory:
+      recurse: false
+  sources: []
+  project: default
+  syncPolicy:
+   automated:
+    selfHeal: true
+    prune: true
