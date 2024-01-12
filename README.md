@@ -1,1 +1,1 @@
-#Igor Baran DevOps course project
+Igor Baran DevOps course project
