@@ -11,8 +11,8 @@ RUN apt-get update && \
 
 RUN apt-get -y install podman
 
-RUN echo "jenkins:1000:65536" >> /etc/subuid
-RUN echo "jenkins:1000:65536" >> /etc/subgid
+RUN echo "jenkins:1001:65536" >> /etc/subuid
+RUN echo "jenkins:1001:65536" >> /etc/subgid
 
 VOLUME [/var/lib/containers]
 VOLUME [/home/podman/.local/share/containers]
