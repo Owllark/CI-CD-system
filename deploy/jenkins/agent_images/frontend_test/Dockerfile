@@ -11,5 +11,8 @@ RUN apt-get install -y xvfb chromium
 
 WORKDIR /app
 
+RUN /bin/sh -c export DISPLAY=:99
+CMD ["Xvfb" ":99" "-screen" "0"]
+
 RUN npm install cypress
 
