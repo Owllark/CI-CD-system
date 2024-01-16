@@ -16,7 +16,7 @@ spec:
   containers:
     - name: build
       imagePullPolicy: Always
-      image: owllark/jenkins-agent:build
+      image: owllark/jenkins-agent-build:latest
       command:
         - cat
       tty: true
@@ -49,8 +49,7 @@ spec:
     stages {
        stage('Repository checkout') {
             steps {
-                checkout scmGit(branches: [[name: 'release']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-owllark', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git']])
-            }
+                checkout scmGit(branches: [[name: '**']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-owllark', name: 'igorbaran_devops_internship_practice', refspec: 'refs/heads/master:refs/remotes/origin/release', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git']])            }
        }
         stage('Unit tests') {
           agent {
@@ -65,7 +64,7 @@ metadata:
 spec:
   containers:
     - name: backend-test
-      image: owllark/jenkins-agent:backend_test
+      image: owllark/jenkins-agent-backend-test:latest
       command:
         - cat
       tty: true
@@ -119,11 +118,53 @@ spec:
             }
         }
 
+        stage('E2E tests') {
+          agent {
+            kubernetes {
+                label "frontend-test"
+                cloud "kubernetes"
+                yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+  namespace: jenkins
+spec:
+  containers:
+  - name: frontend-test
+    image: owllark/jenkins-agent-frontend-test:latest
+    command:
+      - cat
+    tty: true
+  - name: test-container
+    image: ${registry}:$BUILD_NUMBER
+    ports:
+    - containerPort: 8080
+  imagePullSecrets:
+  - name: dockerhub-secret
+    """
+            }
+        }
+            steps {
+                container("frontend-test") {
+                  
+                  
+                  git credentialsId: 'github-owllark', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git', branch: 'release'
+                  sh script:'''
+                      cd app/test/cypresstest
+                      npm install cypress --save-dev
+                      npx cypress run --browser chromium
+                    '''
+                }
+            }
+        }
+
+
         stage('Change image tag in deployment file, and push changes') {
             steps {
                 container("build") {
                     script {
-                        def newImage = "${registry}:1"
+                        def newImage = "${registry}:$BUILD_NUMBER"
                         def deploymentFilePath = 'deploy/dev/deployment.yaml'
 
                         sh """
@@ -149,51 +190,6 @@ spec:
                         }
                     
                     }
-                }
-            }
-        }
-
-      
-
-      
-        stage('E2E tests') {
-          agent {
-            kubernetes {
-                label "frontend-test"
-                cloud "kubernetes"
-                yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-  name: test-pod
-  namespace: jenkins
-spec:
-  containers:
-  - name: frontend-test
-    image: owllark/jenkins-agent:frontend_test
-    command:
-      - cat
-    tty: true
-  - name: test-container
-    image: ${registry}:$BUILD_NUMBER
-    ports:
-    - containerPort: 8080
-  imagePullSecrets:
-  - name: dockerhub-secret
-    """
-            }
-        }
-            steps {
-                container("frontend-test") {
-                  
-                  
-                  git credentialsId: 'github-owllark', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git', branch: 'release'
-                  sh script:'''
-                      cd app/test/cypresstest
-                      Xvfb :99 -screen 0 1024x768x16
-                      export DISPLAY=:99
-                      npx cypress run
-                    '''
                 }
             }
         }
