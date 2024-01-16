@@ -41,3 +41,4 @@ app/test/node_modules/
 app/test/cypress.config.js
 app/test.package.json
 app/test/package-lock.json
+deploy/elk/elastic-credentials.yaml

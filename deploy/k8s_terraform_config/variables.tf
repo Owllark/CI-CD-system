@@ -22,5 +22,5 @@ variable "k8s_poolname" {
 }
 
 variable "k8s_node_count" {
-  default = "3"
+  default = "5"
 }
