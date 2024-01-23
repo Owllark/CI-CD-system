@@ -1,16 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: webapp
+  name: webapp-staging
+  annotations:
+    notifications.argoproj.io/subscribe.on-deployed.jenkins: webhook:jenkins
 spec:
   destination:
     name: ''
-    namespace: production
+    namespace: staging
     server: 'https://kubernetes.default.svc'
   source:
     path: ./deploy/dev
     repoURL: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git'
-    targetRevision: deploy
+    targetRevision: development
     directory:
       recurse: false
   sources: []
