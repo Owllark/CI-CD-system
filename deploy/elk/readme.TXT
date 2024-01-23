@@ -17,7 +17,7 @@ Kibana:
 helm install elk-kibana elastic/kibana -f kibana-values.yamls -n logging
 
 Logstash:
-helm install elk-logstash elastic/logstash -f logstash-values.yaml -n logging
+helm install elk-logstash elastic/logstash -f logstash-values.yaml --set elasticsearch.username=<username> --set elasticsearch.password=<password> -n logging
 
 Fliebeat:
 helm install elk-filebeat elastic/filebeat -f filebeat-values.yaml -n logging
