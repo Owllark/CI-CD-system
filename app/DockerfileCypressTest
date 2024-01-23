@@ -1,0 +1,22 @@
+FROM jenkins/inbound-agent:latest
+
+USER root
+
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+RUN apt-get install -y nodejs
+
+RUN apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb --yes
+RUN apt-get install -y xvfb chromium
+
+WORKDIR /testing
+
+RUN /bin/sh -c export DISPLAY=:99
+CMD ["Xvfb" ":99" "-screen" "0"]
+
+COPY ./test/cypresstest ./
+
+RUN npm install cypress --save-dev
+RUN npm i --save-dev cypress-mochawesome-reporter
+
+ENTRYPOINT ["npx", "cypress", "run", "--browser", "chromium"]
+
