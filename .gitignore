@@ -27,18 +27,8 @@ packages/
 *.nupkg
 *.lock.json
 
-# Ignore IDE and editor specific files
 .idea/
 .vscode/
 
-# Ignore user secrets (customize based on your setup)
-secrets.json
-
-# Ignore application configuration files (customize as needed)
-appsettings*.json
-
-app/test/node_modules/
-app/test/cypress.config.js
-app/test.package.json
-app/test/package-lock.json
+app/test/cypresstest/node_modules/
 deploy/elk/elastic-credentials.yaml
