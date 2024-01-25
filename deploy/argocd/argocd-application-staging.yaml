@@ -12,7 +12,7 @@ spec:
   source:
     path: ./deploy/dev
     repoURL: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git'
-    targetRevision: development
+    targetRevision: staging
     directory:
       recurse: false
   sources: []

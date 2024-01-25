@@ -13,10 +13,18 @@ WORKDIR /testing
 RUN /bin/sh -c export DISPLAY=:99
 CMD ["Xvfb" ":99" "-screen" "0"]
 
-COPY ./test/cypresstest ./
+COPY ./test/cypresstest/cypress ./cypress
+COPY ./test/cypresstest/cypress.config.js ./
+COPY ./test/cypresstest/package.json ./
+COPY ./test/cypresstest/package-lock.json ./
 
 RUN npm install cypress --save-dev
 RUN npm i --save-dev cypress-mochawesome-reporter
 
-ENTRYPOINT ["npx", "cypress", "run", "--browser", "chromium"]
+COPY ./test/cypresstest/run.sh ./
+RUN chmod +x /testing/run.sh
+
+RUN mkdir /reports
+
+ENTRYPOINT ["./run.sh"]
 

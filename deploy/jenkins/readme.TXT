@@ -21,3 +21,7 @@ prod - kubectl create -n jenkins --edit -f  https://raw.githubusercontent.com/ce
 
 Applying ingress(accessible via jenkins.owllark.mooo.com):
 kubectl apply -f jenkins-ingress.yaml -n jenkins
+
+Applying pvc-s for agent pods use:
+kubectl apply -f pvc-cypress.yaml -n jenkins
+kubectl apply -f pvc-unittest.yaml -n jenkins

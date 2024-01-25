@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: "jenkins"
+spec:
+  containers:
+    - name: build
+      image: owllark/jenkins-agent-build:latest
+      command:
+        - cat
+      tty: true
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - mountPath: /var/lib/containers
+          name: podman-volume
+        - mountPath: /dev/shm
+          name: devshm-volume
+        - mountPath: /var/run
+          name: varrun-volume
+        - mountPath: /tmp
+          name: tmp-volume
+  restartPolicy: Never
+  volumes:
+    - name: podman-volume
+      emptyDir: {}
+    - emptyDir:
+        medium: Memory
+      name: devshm-volume
+    - emptyDir: {}
+      name: varrun-volume
+    - emptyDir: {}
+      name: tmp-volume

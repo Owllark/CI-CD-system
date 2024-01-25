@@ -28,5 +28,9 @@ WORKDIR /testing/test/app.unittest
 
 RUN dotnet --version
 
-ENTRYPOINT ["dotnet", "test", "--logger", "trx;LogFileName=test-results.trx"]
+RUN mkdir /reports
+
+RUN chmod +x ./run.sh
+
+ENTRYPOINT ["./run.sh"]
 
