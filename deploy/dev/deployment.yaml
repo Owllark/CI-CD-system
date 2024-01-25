@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: aspnet-app
-  namespace: production
   labels:
     app: aspnet-app
 spec:
@@ -17,7 +16,7 @@ spec:
     spec:
       containers:
       - name: aspnet-container
-        image: owllark/webapp:192
+        image: owllark/webapp:88
         ports:
         - containerPort: 8080
       imagePullSecrets:
