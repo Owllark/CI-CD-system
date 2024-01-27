@@ -1,9 +1,9 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: webapp-staging
+  name: app-staging
   annotations:
-    notifications.argoproj.io/subscribe.on-deployed.jenkins: webhook:jenkins
+    notifications.argoproj.io/subscribe.on-deployed.jenkins: 'webhook:jenkins'
 spec:
   destination:
     name: ''
@@ -14,10 +14,11 @@ spec:
     repoURL: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git'
     targetRevision: staging
     directory:
-      recurse: false
+      recurse: true
+      exclude: prod_only_manifests/*
   sources: []
   project: default
   syncPolicy:
-   automated:
-    selfHeal: true
-    prune: true
+    automated:
+      selfHeal: true
+      prune: true

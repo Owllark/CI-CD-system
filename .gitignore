@@ -32,3 +32,4 @@ packages/
 
 app/test/cypresstest/node_modules/
 deploy/elk/elastic-credentials.yaml
+deploy/argocd/notifications-secret.yaml

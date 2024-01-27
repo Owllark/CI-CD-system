@@ -112,20 +112,31 @@ pipeline {
                                 def newImage = "${registry}:$BUILD_NUMBER"
                                 def deploymentFilePath = 'deploy/dev/deployment.yaml'
                                 
+                                withCredentials([string(credentialsId: 'GITHUB_HOST_KEY', variable: 'GITHUB_HOST_KEY')]) {
+                                    sh 'mkdir -p ~/.ssh && echo "$GITHUB_HOST_KEY" >> ~/.ssh/known_hosts'
+                                }
+
                                 sh """
                                     git config --global user.email "jenkins@gmail.com"
                                     git config --global user.name "Jenkins"
                                     git config --global --add safe.directory /home/jenkins/agent/workspace/ci_pipeline
+                                """
+                                sh """
                                     git checkout -b release
                                     git merge staging
                                 """
-
-                                withCredentials([string(credentialsId: 'GITHUB_HOST_KEY', variable: 'GITHUB_HOST_KEY')]) {
-                                    sh 'mkdir -p ~/.ssh && echo "$GITHUB_HOST_KEY" >> ~/.ssh/known_hosts'
-                                }
                                 sshagent (credentials: ['github-owllark']) {
                                     sh """
                                         git push -f origin -- release
+                                    """
+                                }
+                                sh """
+                                    git checkout -b main
+                                    git merge staging
+                                """
+                                sshagent (credentials: ['github-owllark']) {
+                                    sh """
+                                        git push -f origin -- main
                                     """
                                 }
                             } else {

@@ -14,5 +14,3 @@ fi
 echo "Saving test output..."
 echo "$test_output" > /reports/test_output
 echo "Saved to /reports/test_output"
-
-sleep 3900

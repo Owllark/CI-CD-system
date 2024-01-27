@@ -14,7 +14,8 @@ pipeline {
     stages {
        stage('Repository checkout') {
             steps {
-                checkout scmGit(branches: [[name: '**']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-owllark', name: 'origin', refspec: 'refs/heads/development:refs/remotes/origin/development', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git']])            }
+                checkout scmGit(branches: [[name: 'development']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-owllark', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git']])            
+            }
        }
 
         stage('Cloning Github repository to build agent') {

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: webapp
+  name: app
 spec:
   destination:
     name: ''
@@ -10,12 +10,11 @@ spec:
   source:
     path: ./deploy/dev
     repoURL: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git'
-    targetRevision: deploy
+    targetRevision: release
     directory:
-      recurse: false
-  sources: []
+      recurse: true
   project: default
   syncPolicy:
-   automated:
-    selfHeal: true
-    prune: true
+    automated:
+      selfHeal: true
+      prune: true

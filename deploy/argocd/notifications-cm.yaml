@@ -8,6 +8,11 @@ data:
     headers:
       - name: Content-Type
         value: application/json
+      - name: Authorization: Bearer
+        valueFrom:
+          secretKeyRef:
+            name: argocd-notifications-secret
+            key: token
     subscriptions:
       - recipients:
           - jenkins
