@@ -1,4 +1,4 @@
-FROM docker.io/owllark/jenkins-agent-backend-base:latest
+FROM docker.io/jenkins/inbound-agent:latest
 
 USER root
 
