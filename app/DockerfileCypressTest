@@ -22,7 +22,7 @@ RUN npm install cypress --save-dev
 RUN npm i --save-dev cypress-mochawesome-reporter
 
 COPY ./test/cypresstest/run.sh ./
-RUN chmod +x /testing/run.sh
+RUN chmod +x ./run.sh
 
 RUN mkdir /reports
 
