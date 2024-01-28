@@ -6,7 +6,7 @@ echo "$test_output"
 cp -r /testing/test/app.unittest/TestResults/* /reports
 
 if echo "$test_output" | grep -q "Passed!"; then
-  echo "All tests passed."
+  echo "All tests passed"
 else
   echo "Some tests failed or an error has occured"
 fi
@@ -14,5 +14,3 @@ fi
 echo "Saving test output..."
 echo "$test_output" > /reports/test_output
 echo "Saved to /reports/test_output"
-
-sleep 3900
