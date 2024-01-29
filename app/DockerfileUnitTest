@@ -17,11 +17,3 @@ COPY ./app.sln ./
 
 WORKDIR /testing/test/app.unittest
 
-RUN dotnet --version
-
-RUN mkdir /reports
-
-RUN chmod +x ./run.sh
-
-ENTRYPOINT ["./run.sh"] 
-
