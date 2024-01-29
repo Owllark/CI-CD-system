@@ -20,5 +20,5 @@ RUN chmod +x ./run.sh
 
 RUN mkdir /reports
 
-ENTRYPOINT ["./run.sh"]
+ENTRYPOINT ["./run.sh"] 
 
