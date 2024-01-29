@@ -21,10 +21,5 @@ RUN npm i --save-dev cypress-mochawesome-reporter
 
 COPY ./test/cypresstest/cypress ./cypress
 COPY ./test/cypresstest/cypress.config.js ./
-COPY ./test/cypresstest/run.sh ./
-RUN chmod +x /testing/run.sh
 
-RUN mkdir /reports
-
-ENTRYPOINT ["./run.sh"] 
 
