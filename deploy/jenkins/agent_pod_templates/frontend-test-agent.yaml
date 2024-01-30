@@ -6,6 +6,10 @@ spec:
   containers:
   - name: frontend-test
     image: owllark/jenkins-agent-frontend-test:latest
+    command:
+      - /bin/sh
+      - "-c"
+      - "sleep infinity"
     tty: true
     volumeMounts:
     - name: report-volume
