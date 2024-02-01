@@ -19,6 +19,10 @@ readinessProbe:
   failureThreshold: 3
   successThreshold: 3
 
+elasticsearch:
+  password: password
+  username: username
+
 logstashConfig:
   logstash.yml: |
     http.host: 0.0.0.0
@@ -32,11 +36,21 @@ logstashPipeline:
       }
     }
     output {
-      elasticsearch {
-        hosts => "http://elasticsearch-master.logging.svc.cluster.local:9200"
-        manage_template => false
-        index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
-        document_type => "%{[@metadata][type]}"
+      if "Application Log" in [message] {
+        elasticsearch {
+          hosts => "https://elasticsearch-master:9200"
+          ssl_certificate_verification => false
+          user => "{{ .Values.elasticsearch.username | default "" }}"
+          password => "{{ .Values.elasticsearch.password | default "" }}"
+          index => "my_index"
+        }
+      } else {
+        elasticsearch {
+          hosts => "https://elasticsearch-master:9200"
+          ssl_certificate_verification => false
+          user => "{{ .Values.elasticsearch.username | default "" }}"
+          password => "{{ .Values.elasticsearch.password | default "" }}"
+        }
       }
     }
 

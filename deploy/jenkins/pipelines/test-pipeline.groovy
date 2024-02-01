@@ -7,7 +7,7 @@ pipeline {
     }
     agent any
     stages{
-        stage('Testing') {
+       stage('Testing') {
             parallel {
                 stage('Unit tests') {
                   agent {
@@ -128,15 +128,6 @@ pipeline {
                                 sshagent (credentials: ['github-owllark']) {
                                     sh """
                                         git push -f origin -- release
-                                    """
-                                }
-                                sh """
-                                    git checkout -b main
-                                    git merge staging
-                                """
-                                sshagent (credentials: ['github-owllark']) {
-                                    sh """
-                                        git push -f origin -- main
                                     """
                                 }
                             } else {

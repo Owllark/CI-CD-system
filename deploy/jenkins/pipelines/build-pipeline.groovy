@@ -1,212 +1,158 @@
+def getPreviousUnsuccessfullBuilds(passedBuilds, build) {
+    if ((build != null) && (build.result != 'SUCCESS')) {
+        passedBuilds.add(build)
+        getPreviousUnsuccessfullBuilds(passedBuilds, build.getPreviousBuild())
+    }
+}
+
+def getAffectedFilePaths() {
+
+    def passedBuilds = [currentBuild]
+
+    getPreviousUnsuccessfullBuilds(passedBuilds, currentBuild.getPreviousBuild());
+
+    def affectedPaths  = []
+    for (int x = 0; x < passedBuilds.size(); x++) {
+        def currentBuild = passedBuilds[x];
+        def changeLogSets = currentBuild.rawBuild.changeSets
+        for (int i = 0; i < changeLogSets.size(); i++) {
+            def entries = changeLogSets[i].items
+            for (int j = 0; j < entries.length; j++) {
+                def entry = entries[j]
+                affectedPaths.addAll(entry.getAffectedPaths())
+            }
+        }
+    }
+    return affectedPaths.unique();
+}
+
 pipeline {
     environment {
-        registry = 'owllark/webapp'
         registryCredential = 'dockerhub-owllark'
+        unitTestChanged = false
+        cypressTestChanged = false
+        appChanged = false
+        manifestsChanged = false
     }
     agent {
         kubernetes {
-            label "build"
-            cloud "kubernetes"
-            yaml '''
-apiVersion: v1
-kind: Pod
-metadata:
-  namespace: "jenkins"
-spec:
-  containers:
-    - name: build
-      imagePullPolicy: Always
-      image: owllark/jenkins-agent-build:latest
-      command:
-        - cat
-      tty: true
-      securityContext:
-        privileged: true
-      volumeMounts:
-        - mountPath: /var/lib/containers
-          name: podman-volume
-        - mountPath: /dev/shm
-          name: devshm-volume
-        - mountPath: /var/run
-          name: varrun-volume
-        - mountPath: /tmp
-          name: tmp-volume
-  restartPolicy: Never
-  volumes:
-    - name: podman-volume
-      emptyDir: {}
-    - emptyDir:
-        medium: Memory
-      name: devshm-volume
-    - emptyDir: {}
-      name: varrun-volume
-    - emptyDir: {}
-      name: tmp-volume
-'''
+            inheritFrom "build-agent"
         }
     }
     
     stages {
        stage('Repository checkout') {
             steps {
-                checkout scmGit(branches: [[name: '**']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-owllark', name: 'igorbaran_devops_internship_practice', refspec: 'refs/heads/master:refs/remotes/origin/release', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git']])            }
+                checkout scmGit(branches: [[name: 'development']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-owllark', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git']])           
+            }
        }
-        stage('Unit tests') {
-          agent {
-            kubernetes {
-                label "backend-test"
-                cloud "kubernetes"
-                yaml '''
-apiVersion: v1
-kind: Pod
-metadata:
-  namespace: "jenkins"
-spec:
-  containers:
-    - name: backend-test
-      image: owllark/jenkins-agent-backend-test:latest
-      command:
-        - cat
-      tty: true
-    '''
-            }
-        }
-            steps {
-                container("backend-test") {
-                  git credentialsId: 'github-owllark', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git', branch: 'main'
-                  sh script:'''
-                      cd app/
-                      dotnet test
-                    '''
-                }
-            }
-        }
-        stage('Cloning Github repository to build agent') {
-            steps {
+
+      stage('Cloning Github repository') {
+        steps {
+            script {
                 container("build") {
-                    git credentialsId: 'github-owllark', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git', branch: 'release'
+                    git credentialsId: 'github-owllark', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git', branch: 'development'
+                
+                    def affectedFilePaths = getAffectedFilePaths()
+                    unitTestChanged = affectedFilePaths.any { it.startsWith('app/test/app.unittest') } || affectedFilePaths.any { it == 'app/DockerfileUnitTest' }
+                    cypressTestChanged = affectedFilePaths.any { it.startsWith('app/test/cypresstest') } || affectedFilePaths.any { it == 'app/DockerfileCypressTest' }
+                    appChanged = affectedFilePaths.any { it.startsWith('app/src/aspnetcoreapp') } || affectedFilePaths.any { it == 'app/DockerfileApp' }
+                    manifestsChanged = affectedFilePaths.any { it.startsWith('deploy/dev') }
                 }
             }
         }
-        stage('Building image') {
+      }
+
+        stage('Building and pushing images') {
             steps {
                 container("build") {
                     script {
-                        withCredentials([usernamePassword(credentialsId: registryCredential,
-                                               usernameVariable: 'USERNAME',
-                                               passwordVariable: 'PASSWORD')]) {
-                          sh script:'''
-                              cd app/src/aspnetcoreapp/
-                              podman login -u ${USERNAME} -p ${PASSWORD} docker.io --tls-verify=false
-                              podman build -t ${registry}:$BUILD_NUMBER .
-                            '''
+                        if (unitTestChanged || cypressTestChanged || appChanged) {
+                            withCredentials([usernamePassword(credentialsId: registryCredential,
+                                                usernameVariable: 'USERNAME',
+                                                passwordVariable: 'PASSWORD')]) {
+                                    sh script:'''
+                                        podman login -u ${USERNAME} -p ${PASSWORD} docker.io --tls-verify=false
+                                    '''
+                            }
+                            if (unitTestChanged) {
+                                echo "Building unit tests image..."
+                                def imageName = "owllark/jenkins-agent-backend-test:latest"
+                                sh script:"""
+                                        cd app/
+                                        podman build -t ${imageName} -f DockerfileUnitTest .
+                                        podman push ${imageName}
+                                        podman rmi ${imageName}
+                                    """
+                            }
+                            if (cypressTestChanged) {
+                                echo "Building Cypress tests image..."
+                                def imageName = "owllark/jenkins-agent-frontend-test:latest"
+                                sh script:"""
+                                        cd app/
+                                        podman build -t ${imageName} -f DockerfileCypressTest .
+                                        podman push ${imageName}
+                                        podman rmi ${imageName}
+                                    """
+                            }
+                            if (appChanged) {
+                                echo "Building application image..."
+                                def imageName = "owllark/webapp:$BUILD_NUMBER"
+                                sh script:"""
+                                        cd app/
+                                        podman build -t ${imageName} -f DockerfileApp .
+                                        podman push ${imageName}
+                                        podman rmi ${imageName}
+                                    """
+                            }
+                        } else {
+                            echo "No changes to build"
                         }
                     }
                 }
             }
         }
-
-        stage('Push image') {
-            steps {
-                container("build") {
-                    script {
-                        sh script:'''
-                            podman push ${registry}:$BUILD_NUMBER
-                          '''
-                    }
-                }
-            }
-        }
-
-        stage('E2E tests') {
-          agent {
-            kubernetes {
-                label "frontend-test"
-                cloud "kubernetes"
-                yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-  name: test-pod
-  namespace: jenkins
-spec:
-  containers:
-  - name: frontend-test
-    image: owllark/jenkins-agent-frontend-test:latest
-    command:
-      - cat
-    tty: true
-  - name: test-container
-    image: ${registry}:$BUILD_NUMBER
-    ports:
-    - containerPort: 8080
-  imagePullSecrets:
-  - name: dockerhub-secret
-    """
-            }
-        }
-            steps {
-                container("frontend-test") {
-                  
-                  
-                  git credentialsId: 'github-owllark', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git', branch: 'release'
-                  sh script:'''
-                      cd app/test/cypresstest
-                      npm install cypress --save-dev
-                      npx cypress run --browser chromium
-                    '''
-                }
-            }
-        }
-
 
         stage('Change image tag in deployment file, and push changes') {
-            steps {
-                container("build") {
-                    script {
-                        def newImage = "${registry}:$BUILD_NUMBER"
-                        def deploymentFilePath = 'deploy/dev/deployment.yaml'
+                steps {
+                    container("build") {
+                        script {
 
-                        sh """
-                            git config --global user.email "jenkins@gmail.com"
-                            git config --global user.name "Jenkins"
-                            git config --global --add safe.directory /home/jenkins/agent/workspace/ci_pipeline
-                            git checkout -b deploy
-                            git merge release
-                            sed -i 's|image:.*|image: ${newImage}|' deploy/dev/deployment.yaml
-                            git add deploy/dev/deployment.yaml
-                            git commit -m 'Update deployment.yaml #$BUILD_NUMBER'
-                            git tag #$BUILD_NUMBER -- deploy
-                        """
-
-                        withCredentials([string(credentialsId: 'GITHUB_HOST_KEY', variable: 'GITHUB_HOST_KEY')]) {
-                            sh 'mkdir -p ~/.ssh && echo "$GITHUB_HOST_KEY" >> ~/.ssh/known_hosts'
-                        }
-                        sshagent (credentials: ['github-owllark']) {
                             sh """
-                                git checkout -- deploy
-                                git push -f origin -- deploy
+                                git config --global user.email "jenkins@gmail.com"
+                                git config --global user.name "Jenkins"
+                                git config --global --add safe.directory /home/jenkins/agent/workspace/build_pipeline
+                                git checkout -b staging
+                                git merge origin/development
                             """
+                            if (appChanged) {
+                                def newImage = "owllark/webapp:$BUILD_NUMBER"
+                                def deploymentFilePath = 'deploy/dev/deployment.yaml'
+                                sh """
+                                    sed -i 's|image:.*|image: ${newImage}|' ${deploymentFilePath}
+                                    git add ${deploymentFilePath}
+                                    git commit -m 'Update deployment.yaml #$BUILD_NUMBER'
+                                    git tag #$BUILD_NUMBER -- staging
+                                """
+                            } else {
+                                sh """
+                                    git tag #$BUILD_NUMBER -- staging
+                                """
+                            }
+
+                            withCredentials([string(credentialsId: 'GITHUB_HOST_KEY', variable: 'GITHUB_HOST_KEY')]) {
+                                sh 'mkdir -p ~/.ssh && echo "$GITHUB_HOST_KEY" >> ~/.ssh/known_hosts'
+                            }
+                            sshagent (credentials: ['github-owllark']) {
+                                sh """
+                                    git push -f origin -- staging
+                                """
+                            }
+                        
                         }
-                    
                     }
                 }
-            }
-        }
-
-        stage('Cleaning up') {
-            steps {
-                container("build") {
-                    script {
-                        sh script:'''
-                            podman rmi ${registry}:$BUILD_NUMBER
-                          '''
-                    }
-                }
-            }
-        }
-
-    }
+             }
+      }
 }
-
 
