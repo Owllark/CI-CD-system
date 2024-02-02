@@ -1,4 +1,9 @@
 #!/bin/bash
+
+Xvfb :99 &
+
+export DISPLAY=:99
+
 cypress_output=$(npx cypress run --browser chromium)
 
 echo "$cypress_output"
