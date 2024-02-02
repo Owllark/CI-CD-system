@@ -12,9 +12,5 @@ RUN npm install cypress-mochawesome-reporter
 
 COPY ./test/cypresstest/cypress ./cypress
 COPY ./test/cypresstest/cypress.config.js ./
-COPY ./test/cypresstest/run.sh ./
-RUN chmod +x /testing/run.sh
 
-RUN mkdir /reports
-
-CMD ["./run.sh"] 
+CMD ["jenkins-agent"] 
