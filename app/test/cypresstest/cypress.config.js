@@ -1,12 +1,20 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
-  reporter: 'cypress-mochawesome-reporter',
-  reporterOptions: {
-    charts: true,
-    embeddedScreenshots: true,
-    reportDir: "reports",
-    reportFilename: "report.html"
+
+  "reporter": "cypress-multi-reporters",
+  "reporterOptions": {
+    "reporterEnabled": "mochawesome, mocha-junit-reporter",
+    "mochawesomeReporterOptions": {
+      "charts": true,
+      "embeddedScreenshots": true,
+      "reportDir": "reports",
+      "reportFilename": "report.html"
+    },
+    "mochaJunitReporterReporterOptions": {
+      "mochaFile": "test-result.xml",
+      "toConsole": true
+    },
   },
   e2e: {
     setupNodeEvents(on, config) {
@@ -14,3 +22,4 @@ module.exports = defineConfig({
     },
   },
 });
+
