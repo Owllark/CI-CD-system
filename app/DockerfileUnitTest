@@ -17,9 +17,5 @@ COPY ./app.sln ./
 
 WORKDIR /testing/test/app.unittest
 
-COPY ./test/app.unittest/run.sh ./
-
-RUN chmod +x run.sh
-
-ENTRYPOINT ["./run.sh"] 
+CMD ["jenkins-agent"] 
 
