@@ -17,9 +17,9 @@ COPY ./app.sln ./
 
 WORKDIR /testing/test/app.unittest
 
-RUN mkdir /reports
+COPY ./test/app.unittest/run.sh ./
 
-RUN chmod +x ./run.sh
+RUN chmod +x run.sh
 
 ENTRYPOINT ["./run.sh"] 
 

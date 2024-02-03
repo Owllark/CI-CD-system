@@ -9,6 +9,8 @@ COPY ./test/cypresstest/package-lock.json ./
 
 RUN npm install cypress
 RUN npm install cypress-mochawesome-reporter
+RUN npm install mocha-junit-reporter --save-dev
+RUN npm install cypress-multi-reporters --save-dev
 
 COPY ./test/cypresstest/cypress ./cypress
 COPY ./test/cypresstest/cypress.config.js ./
