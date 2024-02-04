@@ -1,0 +1,23 @@
+controller:
+  ingress:
+    enabled: true
+    apiVersion: "networking.k8s.io/v1"
+    labels: {}
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    ingressClassName: "nginx"
+    tls:
+      - hosts:
+          - jenkins.owllark.chickenkiller.com
+        secretName: jenkins-certificate-tls
+    rules:
+      - host: jenkins.owllark.chickenkiller.com
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: jenkins
+                  port:
+                    number: 8080

@@ -36,13 +36,13 @@ logstashPipeline:
       }
     }
     output {
-      if "Application Log" in [message] {
+      if [kubernetes][container][name] == "aspnet-container" {
         elasticsearch {
           hosts => "https://elasticsearch-master:9200"
           ssl_certificate_verification => false
           user => "{{ .Values.elasticsearch.username | default "" }}"
           password => "{{ .Values.elasticsearch.password | default "" }}"
-          index => "my_index"
+          index => "my-index"
         }
       } else {
         elasticsearch {

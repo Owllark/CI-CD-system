@@ -9,3 +9,5 @@ resources:
   limits:
     memory: "1Gi"
     cpu: "1" 
+
+clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"

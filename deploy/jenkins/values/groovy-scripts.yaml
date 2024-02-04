@@ -1,0 +1,47 @@
+controller:
+  JCasC:
+    enabled: true
+    configScripts:
+      groovy-setup-scripts: |
+        groovy:
+         # sets the property to have the possibility to view html cypress reports
+         - script: >
+            System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
+
+         # removes default cloud created by helm
+         - script: >
+            import jenkins.model.*;
+            import hudson.slaves.Cloud;
+
+            def cloudName = "default";
+
+            def instance = Jenkins.instance;
+            def clouds = instance.clouds;
+
+            clouds.each { cloud ->
+                if (cloud.name == cloudName && cloud instanceof org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud) {
+                    clouds.remove(cloud);
+                    instance.save();
+                    println("Kubernetes Cloud '$cloudName' deleted successfully.");
+                    return;
+                }
+            }
+         # sets pod retention policy to "always"
+         - script: >
+            import jenkins.model.*;
+
+            def cloudName = "kubernetes";
+
+            def instance = Jenkins.instance;
+            def clouds = instance.clouds;
+
+            clouds.each { cloud ->
+                if (cloud.name == cloudName && cloud instanceof org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud) {
+                    cloud.setPodRetention(new org.csanchez.jenkins.plugins.kubernetes.pod.retention.Always());
+                    instance.save();
+                    println("Pod retention policy set to 'Always' for Kubernetes Cloud '$cloudName'.");
+                    return;
+                }
+            }
+
+         

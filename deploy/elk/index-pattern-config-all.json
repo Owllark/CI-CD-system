@@ -1,0 +1,11 @@
+{
+    "attributes": {
+      "fieldAttrs": "{}",
+      "title": "*",
+      "timeFieldName": "@timestamp",
+      "fields": "[]",
+      "typeMeta": "{}",
+      "runtimeFieldMap": "{}"
+    }
+  }
+  

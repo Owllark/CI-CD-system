@@ -9,10 +9,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - elk.owllark.mooo.com
+    - elk.owllark.chickenkiller.com
     secretName: elk-certificate-tls
   rules:
-  - host: elk.owllark.mooo.com
+  - host: elk.owllark.chickenkiller.com
     http:
       paths:
       - path: /
