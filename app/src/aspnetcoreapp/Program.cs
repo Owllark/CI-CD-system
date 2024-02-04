@@ -1,5 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.AddSimpleConsole(c =>
+    {
+        c.SingleLine = true;
+    });
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 
