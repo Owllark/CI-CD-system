@@ -32,4 +32,6 @@ packages/
 
 app/test/cypresstest/node_modules/
 deploy/elk/elastic-credentials.yaml
-deploy/argocd/notifications-secret.yaml
+app\src\aspnetcoreapp\bin\
+app\src\aspnetcoreapp\obj\
+
