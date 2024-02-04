@@ -73,122 +73,6 @@ controller:
                 slaveConnectTimeout: 100
                 slaveConnectTimeoutStr: "100"
                 yamlMergeStrategy: "override"
-              - id: "52a4d9fc-be8b-4598-abba-5a0dbff683a3"
-                name: "build-agent"
-                yaml: |-
-                  apiVersion: v1
-                  kind: Pod
-                  metadata:
-                    namespace: "jenkins"
-                  spec:
-                    containers:
-                      - name: build
-                        imagePullPolicy: Always
-                        image: owllark/jenkins-agent-build:latest
-                        command:
-                          - cat
-                        tty: true
-                        securityContext:
-                          privileged: true
-                        volumeMounts:
-                          - mountPath: /var/lib/containers
-                            name: podman-volume
-                          - mountPath: /dev/shm
-                            name: devshm-volume
-                          - mountPath: /var/run
-                            name: varrun-volume
-                          - mountPath: /tmp
-                            name: tmp-volume
-                    restartPolicy: Never
-                    volumes:
-                      - name: podman-volume
-                        emptyDir: {}
-                      - emptyDir:
-                          medium: Memory
-                        name: devshm-volume
-                      - emptyDir: {}
-                        name: varrun-volume
-                      - emptyDir: {}
-                        name: tmp-volume
-                yamlMergeStrategy: "override"
-                yamls:
-                - |-
-                  apiVersion: v1
-                  kind: Pod
-                  metadata:
-                    namespace: "jenkins"
-                  spec:
-                    containers:
-                      - name: build
-                        imagePullPolicy: Always
-                        image: owllark/jenkins-agent-build:latest
-                        command:
-                          - cat
-                        tty: true
-                        securityContext:
-                          privileged: true
-                        volumeMounts:
-                          - mountPath: /var/lib/containers
-                            name: podman-volume
-                          - mountPath: /dev/shm
-                            name: devshm-volume
-                          - mountPath: /var/run
-                            name: varrun-volume
-                          - mountPath: /tmp
-                            name: tmp-volume
-                    restartPolicy: Never
-                    volumes:
-                      - name: podman-volume
-                        emptyDir: {}
-                      - emptyDir:
-                          medium: Memory
-                        name: devshm-volume
-                      - emptyDir: {}
-                        name: varrun-volume
-                      - emptyDir: {}
-                        name: tmp-volume
-              - id: "e0dcc860-c08b-4eec-bce6-4fbc873b3661"
-                name: "frontend-test-agent"
-                yaml: |-
-                  apiVersion: v1
-                  kind: Pod
-                  metadata:
-                    namespace: jenkins
-                  spec:
-                    containers:
-                    - name: frontend-test
-                      image: owllark/jenkins-agent-frontend-test:latest
-                      tty: true
-                      volumeMounts:
-                      - name: report-volume
-                        mountPath: /reports
-                    imagePullSecrets:
-                    - name: dockerhub-secret
-                    volumes:
-                    - name: report-volume
-                      persistentVolumeClaim:
-                          claimName: cypress-report-pvc
-                yamlMergeStrategy: "override"
-                yamls:
-                - |-
-                  apiVersion: v1
-                  kind: Pod
-                  metadata:
-                    namespace: jenkins
-                  spec:
-                    containers:
-                    - name: frontend-test
-                      image: owllark/jenkins-agent-frontend-test:latest
-                      tty: true
-                      volumeMounts:
-                      - name: report-volume
-                        mountPath: /reports
-                    imagePullSecrets:
-                    - name: dockerhub-secret
-                    volumes:
-                    - name: report-volume
-                      persistentVolumeClaim:
-                          claimName: cypress-report-pvc
               - id: "9551c76d-10d2-42d8-846e-73bd684df07d"
                 name: "backend-test-agent"
                 yaml: |-
@@ -201,15 +85,8 @@ controller:
                     - name: backend-test
                       image: owllark/jenkins-agent-backend-test:latest
                       tty: true
-                      volumeMounts:
-                      - name: report-volume
-                        mountPath: /reports
                     imagePullSecrets:
                     - name: dockerhub-secret
-                    volumes:
-                    - name: report-volume
-                      persistentVolumeClaim:
-                          claimName: unittest-report-pvc
                 yamlMergeStrategy: "override"
                 yamls:
                 - |-
@@ -222,15 +99,82 @@ controller:
                     - name: backend-test
                       image: owllark/jenkins-agent-backend-test:latest
                       tty: true
-                      volumeMounts:
-                      - name: report-volume
-                        mountPath: /reports
                     imagePullSecrets:
                     - name: dockerhub-secret
+              - id: "e0dcc860-c08b-4eec-bce6-4fbc873b3661"
+                name: "frontend-test-agent"
+                yaml: |
+                  apiVersion: v1
+                  kind: Pod
+                  metadata:
+                    namespace: jenkins
+                  spec:
+                    containers:
+                    - name: frontend-test
+                      image: owllark/jenkins-agent-frontend-test:latest
+                      tty: true
+                    imagePullSecrets:
+                    - name: dockerhub-secret
+                yamlMergeStrategy: "override"
+                yamls:
+                - |
+                  apiVersion: v1
+                  kind: Pod
+                  metadata:
+                    namespace: jenkins
+                  spec:
+                    containers:
+                    - name: frontend-test
+                      image: owllark/jenkins-agent-frontend-test:latest
+                      tty: true
+                    imagePullSecrets:
+                    - name: dockerhub-secret
+              - id: "52a4d9fc-be8b-4598-abba-5a0dbff683a3"
+                name: "build-agent"
+                yaml: |-
+                  apiVersion: v1
+                  kind: Pod
+                  metadata:
+                    namespace: "jenkins"
+                  spec:
+                    containers:
+                      - name: build
+                        image: owllark/jenkins-agent-build:latest
+                        command:
+                          - cat
+                        tty: true
+                        securityContext:
+                          privileged: true
+                        volumeMounts:
+                          - mountPath: /var/lib/containers
+                            name: podman-volume
+                    restartPolicy: Never
                     volumes:
-                    - name: report-volume
-                      persistentVolumeClaim:
-                          claimName: unittest-report-pvc
+                      - name: podman-volume
+                        emptyDir: {}
+                yamlMergeStrategy: "override"
+                yamls:
+                - |-
+                  apiVersion: v1
+                  kind: Pod
+                  metadata:
+                    namespace: "jenkins"
+                  spec:
+                    containers:
+                      - name: build
+                        image: owllark/jenkins-agent-build:latest
+                        command:
+                          - cat
+                        tty: true
+                        securityContext:
+                          privileged: true
+                        volumeMounts:
+                          - mountPath: /var/lib/containers
+                            name: podman-volume
+                    restartPolicy: Never
+                    volumes:
+                      - name: podman-volume
+                        emptyDir: {}
         security:
           gitHooks:
             allowedOnAgents: false

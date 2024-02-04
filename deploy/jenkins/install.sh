@@ -20,8 +20,7 @@ kubectl create secret generic jenkins-credentials-secret \
 --from-file=argocd-webhook-token=argocd_webhook_token \
 --from-file=dockerhub-password=dockerhub_password \
 --from-file=github-host-key=github_host_key \
---from-file=github-ssh=github_ssh \
---from-file=github-token=github_token
+--from-file=github-ssh=github_ssh
 
 cd ..
 
@@ -37,9 +36,6 @@ echo "$JENKINS_USERNAME $JENKINS_PASSWORD" > jenkins_credentials
 
 echo $JENKINS_URL
 echo "credentials: " $JENKINS_PASSWORD $JENKINS_PASSWORD
-
-kubectl apply -f pvc-cypress.yaml
-kubectl apply -f pvc-unittest.yaml
 
 
 

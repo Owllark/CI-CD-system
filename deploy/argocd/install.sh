@@ -33,7 +33,9 @@ kubectl exec -it "$ARGOCD_POD_NAME" -- /bin/sh -c "
   argocd repo add $REPO_URL --insecure-ignore-host-key --ssh-private-key-path $REMOTE_DIR/$REPO_PRIVATE_KEY_FILE
 "
 
-kubectl apply -f notifications-secret.yaml
+kubectl create secret generic argocd-notifications-secret \
+  --from-file=jenkins-token=argocd_webhook_token
+
 kubectl apply -f notifications-cm.yaml
 kubectl apply -f argocd-application.yaml
 kubectl apply -f argocd-application-staging.yaml

@@ -6,17 +6,6 @@ spec:
   containers:
   - name: backend-test
     image: owllark/jenkins-agent-backend-test:latest
-    command:
-      - /bin/sh
-      - "-c"
-      - "sleep infinity"
     tty: true
-    volumeMounts:
-    - name: report-volume
-      mountPath: /reports
   imagePullSecrets:
   - name: dockerhub-secret
-  volumes:
-  - name: report-volume
-    persistentVolumeClaim:
-        claimName: unittest-report-pvc
