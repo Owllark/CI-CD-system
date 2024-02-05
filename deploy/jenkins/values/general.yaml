@@ -22,7 +22,6 @@ controller:
   # dockerhub-password
   # github-host-key
   # github-ssh
-  # github-token
   existingSecret: jenkins-credentials-secret
   
   cloudName: "default"

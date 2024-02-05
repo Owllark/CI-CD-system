@@ -32,8 +32,8 @@ pipeline {
                 script {
                     container("backend-test") {
                         sh """
-                            ls -la ${WORKSPACE}
-                            cp /testing/TestResults/test-results.trx ${WORKSPACE}
+                            ls -la $WORKSPACE
+                            cp /testing/TestResults/test-results.trx $WORKSPACE
                         """
                     } 
                 }
@@ -68,8 +68,8 @@ pipeline {
                 script {
                     container("frontend-test") {
                         sh """
-                            cp -r /testing/reports ${WORKSPACE}
-                            cp /testing/test-result.xml ${WORKSPACE}
+                            cp -r /testing/reports $WORKSPACE
+                            cp /testing/test-result.xml $WORKSPACE
                         """
                     } 
                 }

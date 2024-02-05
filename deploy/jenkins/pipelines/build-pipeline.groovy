@@ -71,18 +71,18 @@ pipeline {
                             withCredentials([usernamePassword(credentialsId: registryCredential,
                                                 usernameVariable: 'USERNAME',
                                                 passwordVariable: 'PASSWORD')]) {
-                                    sh script:'''
-                                        podman login -u ${USERNAME} -p ${PASSWORD} docker.io --tls-verify=false
-                                    '''
+                                    sh script:"""
+                                        podman login -u $USERNAME -p $PASSWORD docker.io --tls-verify=false
+                                    """
                             }
                             if (unitTestChanged) {
                                 echo "Building unit tests image..."
                                 def imageName = "owllark/jenkins-agent-backend-test:latest"
                                 sh script:"""
                                         cd app/
-                                        podman build -t ${imageName} -f DockerfileUnitTest .
-                                        podman push ${imageName}
-                                        podman rmi ${imageName}
+                                        podman build -t $imageName -f DockerfileUnitTest .
+                                        podman push $imageName
+                                        podman rmi $imageName
                                     """
                             }
                             if (cypressTestChanged) {
@@ -90,9 +90,9 @@ pipeline {
                                 def imageName = "owllark/jenkins-agent-frontend-test:latest"
                                 sh script:"""
                                         cd app/
-                                        podman build -t ${imageName} -f DockerfileCypressTest .
-                                        podman push ${imageName}
-                                        podman rmi ${imageName}
+                                        podman build -t $imageName -f DockerfileCypressTest .
+                                        podman push $imageName
+                                        podman rmi $imageName
                                     """
                             }
                             if (appChanged) {
@@ -100,9 +100,9 @@ pipeline {
                                 def imageName = "owllark/webapp:$BUILD_NUMBER"
                                 sh script:"""
                                         cd app/
-                                        podman build -t ${imageName} -f DockerfileApp .
-                                        podman push ${imageName}
-                                        podman rmi ${imageName}
+                                        podman build -t $imageName -f DockerfileApp .
+                                        podman push $imageName
+                                        podman rmi $imageName
                                     """
                             }
                         } else {
@@ -129,8 +129,8 @@ pipeline {
                                 def newImage = "owllark/webapp:$BUILD_NUMBER"
                                 def deploymentFilePath = 'deploy/dev/deployment.yaml'
                                 sh """
-                                    sed -i 's|image:.*|image: ${newImage}|' ${deploymentFilePath}
-                                    git add ${deploymentFilePath}
+                                    sed -i 's|image:.*|image: $newImage|' $deploymentFilePath
+                                    git add $deploymentFilePath
                                     git commit -m 'Update deployment.yaml #$BUILD_NUMBER'
                                     git tag #$BUILD_NUMBER -- staging
                                 """

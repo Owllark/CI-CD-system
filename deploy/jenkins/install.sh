@@ -35,7 +35,7 @@ JENKINS_PASSWORD=$(kubectl exec -n jenkins -it svc/jenkins -c jenkins -- /bin/ca
 echo "$JENKINS_USERNAME $JENKINS_PASSWORD" > jenkins_credentials
 
 echo $JENKINS_URL
-echo "credentials: " $JENKINS_PASSWORD $JENKINS_PASSWORD
+echo "credentials: " $JENKINS_USERNAME $JENKINS_PASSWORD
 
 
 

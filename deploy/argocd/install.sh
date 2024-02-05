@@ -9,8 +9,6 @@ kubectl config set-context --current --namespace=argocd
 helm repo add argocd https://argoproj.github.io/argo-helm
 helm repo update
 
-kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/crds/application-crd.yaml
-
 helm install argocd argocd/argo-cd -f values.yaml
 
 kubectl wait --for=condition=Ready pod -l app.kubernetes.io/name=argocd-application-controller --timeout=-1s
@@ -33,9 +31,11 @@ kubectl exec -it "$ARGOCD_POD_NAME" -- /bin/sh -c "
   argocd repo add $REPO_URL --insecure-ignore-host-key --ssh-private-key-path $REMOTE_DIR/$REPO_PRIVATE_KEY_FILE
 "
 
+kubectl delete secret argocd-notifications-secret 
 kubectl create secret generic argocd-notifications-secret \
   --from-file=jenkins-token=argocd_webhook_token
 
-kubectl apply -f notifications-cm.yaml
+kubectl delete configmap argocd-notifications-cm
+kubectl create -f notifications-cm.yaml
 kubectl apply -f argocd-application.yaml
 kubectl apply -f argocd-application-staging.yaml
