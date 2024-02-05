@@ -17,5 +17,5 @@ COPY ./app.sln ./
 
 WORKDIR /testing/test/app.unittest
 
-CMD ["jenkins-agent"] 
+CMD ["jenkins-agent"]  
 
