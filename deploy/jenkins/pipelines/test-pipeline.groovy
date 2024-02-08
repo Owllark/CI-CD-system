@@ -106,8 +106,8 @@ pipeline {
                             git config --global --add safe.directory /home/jenkins/agent/workspace/ci_pipeline
                         """
                         sh """
-                            git checkout -b release
-                            git merge staging
+                            git checkout -b release origin/release
+                            git merge origin/staging
                         """
                         sshagent (credentials: ['github-owllark']) {
                             sh """

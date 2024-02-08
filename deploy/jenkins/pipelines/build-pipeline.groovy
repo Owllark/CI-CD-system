@@ -122,7 +122,7 @@ pipeline {
                                 git config --global user.email "jenkins@gmail.com"
                                 git config --global user.name "Jenkins"
                                 git config --global --add safe.directory /home/jenkins/agent/workspace/build_pipeline
-                                git checkout -b staging
+                                git checkout -b staging origin/staging
                                 git merge origin/development
                             """
                             if (appChanged) {
