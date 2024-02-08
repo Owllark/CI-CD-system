@@ -32,6 +32,5 @@ packages/
 
 app/test/cypresstest/node_modules/
 deploy/elk/elastic-credentials.yaml
-app\src\aspnetcoreapp\bin\
-app\src\aspnetcoreapp\obj\
-
+app/src/aspnetcoreapp/bin
+app/src/aspnetcoreapp/obj
