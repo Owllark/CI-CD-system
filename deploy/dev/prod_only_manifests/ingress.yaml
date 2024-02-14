@@ -8,10 +8,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - app.owllark.mooo.com
+    - app.owllark.chickenkiller.com
     secretName: app-certificate-tls
   rules:
-  - host: app.owllark.mooo.com
+  - host: app.owllark.chickenkiller.com
     http:
       paths:
       - path: /
