@@ -5,7 +5,7 @@ metadata:
   labels:
     app: aspnet-app
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: aspnet-app
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: aspnet-container
-        image: owllark/webapp:88
+        image: owllark/webapp:<num>
         ports:
         - containerPort: 8080
       imagePullSecrets:
