@@ -10,10 +10,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - argocd.owllark.mooo.com
+    - argocd.owllark.chickenkiller.com
     secretName: argocd-certificate-tls
   rules:
-  - host: argocd.owllark.mooo.com
+  - host: argocd.owllark.chickenkiller.com
     http:
       paths:
       - path: /

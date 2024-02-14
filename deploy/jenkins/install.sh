@@ -24,10 +24,12 @@ kubectl create secret generic jenkins-credentials-secret \
 
 cd ..
 
-helm install jenkins jenkins/jenkins -f general.yaml -f credentials.yaml -f jobs.yaml -f groovy-scripts.yaml -f ingress.yaml
+helm install jenkins jenkins/jenkins -f general.yaml -f credentials.yaml -f jobs.yaml -f groovy-scripts.yaml
 cd ..
 
 kubectl wait --for=condition=Ready pod -l app.kubernetes.io/name=jenkins --timeout=-1s
+
+kubectl apply -f jenkins-ingress.yaml
 
 JENKINS_PASSWORD=$(kubectl exec -n jenkins -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password)
 

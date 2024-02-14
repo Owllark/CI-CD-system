@@ -9,10 +9,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - jenkins.owllark.mooo.com
+    - jenkins.owllark.chickenkiller.com
     secretName: jenkins-certificate-tls
   rules:
-  - host: jenkins.owllark.mooo.com
+  - host: jenkins.owllark.chickenkiller.com
     http:
       paths:
       - path: /

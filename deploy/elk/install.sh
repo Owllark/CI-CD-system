@@ -23,6 +23,8 @@ helm install elk-filebeat elastic/filebeat -f filebeat-values.yaml
 kubectl wait --for=condition=Ready pod -l app=kibana --timeout=-1s
 kubectl wait --for=condition=Ready pod -l app=elk-logstash-logstash --timeout=-1s
 
+kubectl apply -f elk-ingress.yaml
+
 INDEX_NAME="my-index"
 INDEX_CONFIG=$(cat index-config.json)
 LIFECYCLE_NAME="my-policy"

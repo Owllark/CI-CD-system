@@ -13,9 +13,12 @@ helm install argocd argocd/argo-cd -f values.yaml
 
 kubectl wait --for=condition=Ready pod -l app.kubernetes.io/name=argocd-application-controller --timeout=-1s
 
+kubectl apply -f argocd-ingress.yaml
+
 ARGOCD_PASSWORD=$(kubectl get secret argocd-initial-admin-secret  -o jsonpath="{.data.password}" | base64 --decode)
 
 echo "credentials: " $ARGOCD_USERNAME $ARGOCD_PASSWORD
+echo $ARGOCD_USERNAME $ARGOCD_PASSWORD > argocd-credentials
 
 kubectl delete secret argocd-initial-admin-secret
 

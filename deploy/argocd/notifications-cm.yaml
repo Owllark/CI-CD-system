@@ -4,7 +4,7 @@ metadata:
   name: argocd-notifications-cm
 data:
   service.webhook.jenkins: |
-    url: https://jenkins.owllark.mooo.com/generic-webhook-trigger/invoke?token=test
+    url: https://jenkins.owllark.chickenkiller.com/generic-webhook-trigger/invoke?token=test
     headers:
       - name: Content-Type
         value: application/json

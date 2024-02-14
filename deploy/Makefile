@@ -2,7 +2,7 @@
 
 SCRIPTS := preinstall/preinstall.sh jenkins/install.sh elk/install.sh argocd/install.sh
 
-.PHONY: install run_scripts preinstall jenkins elk argocd
+.PHONY: install run_scripts preinstall jenkins elk argocd ingress-controller
 
 install: run_scripts
 

@@ -12,27 +12,3 @@ resources:
 
 kibanaConfig:
   elasticsearchHosts: "http://elasticsearch-master:9200"
-
-ingress:
-  enabled: true
-  apiVersion: networking.k8s.io/v1 
-
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-
-  ingressClassName: nginx
-  tls:
-    - hosts:
-      - elk.owllark.chickenkiller.com
-      secretName: elk-certificate-tls
-  rules:
-    - host: elk.owllark.chickenkiller.com
-      http:
-        paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: elk-kibana-kibana
-              port:
-                number: 5601

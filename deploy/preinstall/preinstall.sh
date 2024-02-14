@@ -19,6 +19,8 @@ kubectl create namespace argocd
 
 
 kubectl create -n jenkins -f cluster-issuer-lets-encrypt.yaml
+kubectl create -n argocd -f cluster-issuer-lets-encrypt.yaml
+kubectl create -n logging -f cluster-issuer-lets-encrypt.yaml
 
 kubectl create secret generic -n staging dockerhub-secret\
      --from-file=.dockerconfigjson=config.json\
