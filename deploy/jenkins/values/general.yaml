@@ -37,6 +37,11 @@ controller:
           authorizationStrategy:
             loggedInUsersCanDoAnything:
               allowAnonymousRead: false
+          globalNodeProperties:
+          - envVars:
+              env:
+              - key: "GITHUB_REPO"
+                value: <{repoUrlSSH}>
           clouds:
           - kubernetes:
               containerCap: 10
@@ -204,3 +209,4 @@ controller:
 rbac:
     create: true
     readSecrets: true
+

@@ -1,19 +1,37 @@
+#!/bin/bash
+
+source ./utils.sh
+
+handle_error() {
+  echo "Error occurred in command: $1"
+  
+  exit 1
+}
+
+trap 'handle_error $BASH_COMMAND' ERR
+
+files=("values.yaml" "notifications-cm.yaml" "argocd-application.yaml" "argocd-application-staging.yaml")
+
+DIR_RENDERED="_rendered_"
+
+declare -A params
+utils_parse_json params config.json
+utils_substitute_placeholders params $DIR_RENDERED "${files[@]}"
+
 ARGOCD_PASSWORD=""
 ARGOCD_USERNAME="admin"
-REPO_URL="git@github.com:Owllark/igorbaran_devops_internship_practice.git"
-REPO_PRIVATE_KEY_FILE="github_ssh_private"
+REPO_URL="${params[repoUrlSSH]}"
+REPO_PRIVATE_KEY_FILE="secrets/github_ssh"
 
-kubectl create namespace argocd
+kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
 kubectl config set-context --current --namespace=argocd
 
 helm repo add argocd https://argoproj.github.io/argo-helm
 helm repo update
 
-helm install argocd argocd/argo-cd -f values.yaml
+helm upgrade --install argocd argocd/argo-cd -f $DIR_RENDERED/values.yaml
 
 kubectl wait --for=condition=Ready pod -l app.kubernetes.io/name=argocd-application-controller --timeout=-1s
-
-kubectl apply -f argocd-ingress.yaml
 
 ARGOCD_PASSWORD=$(kubectl get secret argocd-initial-admin-secret  -o jsonpath="{.data.password}" | base64 --decode)
 
@@ -36,9 +54,14 @@ kubectl exec -it "$ARGOCD_POD_NAME" -- /bin/sh -c "
 
 kubectl delete secret argocd-notifications-secret 
 kubectl create secret generic argocd-notifications-secret \
-  --from-file=jenkins-token=argocd_webhook_token
+  --from-file=jenkins-token=secrets/argocd_webhook_token
 
 kubectl delete configmap argocd-notifications-cm
-kubectl create -f notifications-cm.yaml
-kubectl apply -f argocd-application.yaml
-kubectl apply -f argocd-application-staging.yaml
+kubectl create -f $DIR_RENDERED/notifications-cm.yaml
+
+kubectl apply -f $DIR_RENDERED/argocd-application.yaml
+kubectl apply -f $DIR_RENDERED/argocd-application-staging.yaml
+
+echo "ArgoCD installed successfully!"
+
+utils_delete_rendered_files $DIR_RENDERED "${files[@]}"

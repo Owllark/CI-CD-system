@@ -1,0 +1,13 @@
+{
+    "argocd": {
+      "hostname": "argocd.owllark.mooo.com"
+    },
+    "jenkins": {
+      "hostname": "jenkins.owllark.mooo.com"
+    },
+    "elk": {
+      "hostname": "elk.owllark.mooo.com"
+    },
+    "repoUrlSSH": "git@github.com:Owllark/igorbaran_devops_internship_practice.git"
+}
+  

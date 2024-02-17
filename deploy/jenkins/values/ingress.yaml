@@ -8,10 +8,10 @@ controller:
     ingressClassName: "nginx"
     tls:
       - hosts:
-          - jenkins.owllark.chickenkiller.com
+          - <{jenkins.hostname}>
         secretName: jenkins-certificate-tls
     rules:
-      - host: jenkins.owllark.chickenkiller.com
+      - host: <{jenkins.hostname}>
         http:
           paths:
             - path: /

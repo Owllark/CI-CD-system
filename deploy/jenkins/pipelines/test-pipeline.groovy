@@ -8,7 +8,7 @@ pipeline {
     stages{
        stage ('Clone staging branch') {
            steps {
-               git credentialsId: 'github-owllark', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git', branch: 'staging'
+               git credentialsId: 'github-owllark', url: """$GITHUB_REPO""", branch: 'staging'
            }
        }
 

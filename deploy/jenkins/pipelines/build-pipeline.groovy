@@ -43,7 +43,7 @@ pipeline {
     stages {
        stage('Repository checkout') {
             steps {
-                checkout scmGit(branches: [[name: 'development']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-owllark', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git']])           
+                checkout scmGit(branches: [[name: 'development']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-owllark', url: """$GITHUB_REPO"""]])           
             }
        }
 
@@ -51,7 +51,7 @@ pipeline {
         steps {
             script {
                 container("build") {
-                    git credentialsId: 'github-owllark', url: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git', branch: 'development'
+                    git credentialsId: 'github-owllark', url: """$GITHUB_REPO""" branch: 'development'
                 
                     def affectedFilePaths = getAffectedFilePaths()
                     unitTestChanged = affectedFilePaths.any { it.startsWith('app/test/app.unittest') } || affectedFilePaths.any { it == 'app/DockerfileUnitTest' }

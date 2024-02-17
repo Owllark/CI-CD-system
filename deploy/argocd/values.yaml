@@ -1,4 +1,19 @@
-## Custom resource configuration
-#sscrds:
-  # -- Install and upgrade CRDs
-  #install: false
+
+server:
+  ingress:
+    enabled: true
+    apiVersion: networking.k8s.io/v1
+    labels: {}
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    ingressClassName: nginx
+    tls:
+      - hosts:
+        - <{argocd.hostname}>
+        secretName: argocd-certificate-tls
+    hostname: <{argocd.hostname}>
+    path: /
+    pathtype: "Prefix"
+

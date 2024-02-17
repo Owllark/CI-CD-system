@@ -9,7 +9,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   source:
     path: ./deploy/dev
-    repoURL: 'git@github.com:Owllark/igorbaran_devops_internship_practice.git'
+    repoURL: <{repoUrlSSH}>
     targetRevision: release
     directory:
       recurse: true
