@@ -10,7 +10,7 @@ COPY ./test/app.unittest/*.csproj ./test/app.unittest/
 RUN dotnet restore ./src/aspnetcoreapp/*.csproj 
 RUN dotnet restore ./test/app.unittest/*.csproj
 
-COPY ./src/aspnetcoreapp/ ./src/aspnetcoreapp/
+COPY ./src/aspnetcoreapp/ ./src/aspnetcoreapp/ 
 COPY ./test/app.unittest/ ./test/app.unittest/
 
 COPY ./app.sln ./

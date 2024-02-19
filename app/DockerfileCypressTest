@@ -5,7 +5,7 @@ USER root
 WORKDIR /testing
 
 COPY ./test/cypresstest/package.json ./
-COPY ./test/cypresstest/package-lock.json ./
+COPY ./test/cypresstest/package-lock.json ./ 
 
 RUN npm install cypress
 RUN npm install cypress-mochawesome-reporter
