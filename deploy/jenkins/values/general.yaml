@@ -1,5 +1,38 @@
 controller:
 
+  healthProbes: true
+  probes:
+    startupProbe:
+      httpGet:
+        path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
+        port: http
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 12
+    livenessProbe:
+      failureThreshold: 5
+      httpGet:
+        path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
+        port: http
+      periodSeconds: 10
+      timeoutSeconds: 5
+
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
+        port: http
+      periodSeconds: 10
+      timeoutSeconds: 5
+
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "256Mi"
+    limits:
+      cpu: "2000m"
+      memory: "4096Mi"
+
   installPlugins:
     - kubernetes:latest
     - kubernetes-credentials:latest
@@ -72,7 +105,7 @@ controller:
                 name: "default"
                 namespace: "jenkins"
                 nodeUsageMode: "NORMAL"
-                podRetention: "always"
+                podRetention: "never"
                 serviceAccount: "default"
                 slaveConnectTimeout: 100
                 slaveConnectTimeoutStr: "100"
@@ -91,20 +124,13 @@ controller:
                       tty: true
                     imagePullSecrets:
                     - name: dockerhub-secret
-                yamlMergeStrategy: "override"
-                yamls:
-                - |-
-                  apiVersion: v1
-                  kind: Pod
-                  metadata:
-                    namespace: jenkins
-                  spec:
-                    containers:
-                    - name: backend-test
-                      image: owllark/jenkins-agent-backend-test:latest
-                      tty: true
-                    imagePullSecrets:
-                    - name: dockerhub-secret
+                    resources:
+                      limits:
+                        cpu: "500m"
+                        memory: "1024Mi"
+                      requests:
+                        cpu: "250m"
+                        memory: "256Mi"
               - id: "e0dcc860-c08b-4eec-bce6-4fbc873b3661"
                 name: "frontend-test-agent"
                 yaml: |
@@ -119,20 +145,13 @@ controller:
                       tty: true
                     imagePullSecrets:
                     - name: dockerhub-secret
-                yamlMergeStrategy: "override"
-                yamls:
-                - |
-                  apiVersion: v1
-                  kind: Pod
-                  metadata:
-                    namespace: jenkins
-                  spec:
-                    containers:
-                    - name: frontend-test
-                      image: owllark/jenkins-agent-frontend-test:latest
-                      tty: true
-                    imagePullSecrets:
-                    - name: dockerhub-secret
+                    resources:
+                      limits:
+                        cpu: "500m"
+                        memory: "1024Mi"
+                      requests:
+                        cpu: "250m"
+                        memory: "256Mi"
               - id: "52a4d9fc-be8b-4598-abba-5a0dbff683a3"
                 name: "build-agent"
                 yaml: |-
@@ -152,33 +171,20 @@ controller:
                         volumeMounts:
                           - mountPath: /var/lib/containers
                             name: podman-volume
+                        resources:
+                          limits:
+                            cpu: "500m"
+                            memory: "2048Mi"
+                          requests:
+                            cpu: "250m"
+                            memory: "256Mi"
+                    imagePullSecrets:
+                    - name: dockerhub-secret
                     restartPolicy: Never
                     volumes:
                       - name: podman-volume
                         emptyDir: {}
-                yamlMergeStrategy: "override"
-                yamls:
-                - |-
-                  apiVersion: v1
-                  kind: Pod
-                  metadata:
-                    namespace: "jenkins"
-                  spec:
-                    containers:
-                      - name: build
-                        image: owllark/jenkins-agent-build:latest
-                        command:
-                          - cat
-                        tty: true
-                        securityContext:
-                          privileged: true
-                        volumeMounts:
-                          - mountPath: /var/lib/containers
-                            name: podman-volume
-                    restartPolicy: Never
-                    volumes:
-                      - name: podman-volume
-                        emptyDir: {}
+
         security:
           gitHooks:
             allowedOnAgents: false

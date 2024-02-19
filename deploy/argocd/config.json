@@ -1,6 +1,6 @@
 {
     "argocd": {
-      "hostname": "argocd.owllark.mooo.com"
+      "hostname": "argocd.owllark.moo.com"
     },
     "jenkins": {
       "hostname": "jenkins.owllark.mooo.com"

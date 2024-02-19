@@ -10,9 +10,9 @@ controller:
       - hosts:
           - <{jenkins.hostname}>
         secretName: jenkins-certificate-tls
+    hostName: <{jenkins.hostname}>
     rules:
-      - host: <{jenkins.hostname}>
-        http:
+      - http:
           paths:
             - path: /
               pathType: Prefix

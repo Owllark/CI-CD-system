@@ -10,4 +10,11 @@ resources:
     memory: "1Gi"
     cpu: "1" 
 
+readinessProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 3
+  timeoutSeconds: 5
+
 clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"

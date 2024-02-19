@@ -1,12 +1,14 @@
 #!/bin/bash
 
+# parses json file and fills asssociative array with keys and ther values
+# parameters
+# 1) associative array to be filled
+# 2) json file
 utils_parse_json() {
     local -n params_arr=$1
     local json_file="$2"
-    # Get array of all keys
     keys=($(jq -r 'paths | map(. | tostring) | join(".")' "$json_file"))
 
-    # Function to check if a value is not an array or an object
     is_scalar() {
         local key="$1"
         # Check if the value is not an array and not an object
@@ -28,6 +30,12 @@ utils_parse_json() {
     echo "$json_file parsed successfully"
 }
 
+
+# executes substitution of values from array to given files
+# parameters:
+# 1) associative array with key-value pairs
+# 2) directory where rendered files should be placed
+# 3) list of files for substitution
 utils_substitute_placeholders() {
   local -n params_arr=$1
   local output_dir=$2
@@ -39,12 +47,15 @@ utils_substitute_placeholders() {
   substitute_file() {
     local input_file="$1"
     local output_file="$output_dir/${input_file}" 
-    cp "$input_file" "$output_file"  # Copy the original file to the new file
+    cp "$input_file" "$output_file" 
 
     for placeholder in $(grep -o '<{[^>]*}>' "$output_file"); do
       key="${placeholder:2:-2}"  # Remove <{}> from the placeholder
       value="${params_arr[$key]}"
-
+      if [[ "${key:0:1}" == "/" ]]; then
+          sed -i "s|$placeholder|${placeholder:3:-2}|g" "$output_file"
+          continue
+      fi
       if [ -n "$value" ]; then
         sed -i "s|$placeholder|$value|g" "$output_file"
       else
@@ -61,6 +72,10 @@ utils_substitute_placeholders() {
   done
 }
 
+# deletes files in given directory (useful if you need to delete rendered files, you just need to pass same file list)
+# parameters:
+# 1) directory where files are placed
+# 2) list of files to be deleted
 utils_delete_rendered_files() {
   local dir="$1"
   local files=("${@:2}")

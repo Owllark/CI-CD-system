@@ -13,6 +13,11 @@ JENKINS_PASSWORD=""
 
 trap 'handle_error $BASH_COMMAND' ERR
 
+if [ ! -e "config.json" ]; then
+     echo "Error: config.json not found"
+     exit 1
+fi
+
 kubectl create namespace jenkins --dry-run=client -o yaml | kubectl apply -f -
 
 kubectl config set-context --current --namespace=jenkins
@@ -45,9 +50,6 @@ helm upgrade --install jenkins jenkins/jenkins \
     -f $DIR_RENDERED/groovy-scripts.yaml \
     -f $DIR_RENDERED/ingress.yaml \
     -f $DIR_RENDERED/jobs.yaml
-
-                                    
-utils_delete_rendered_files $DIR_RENDERED "${files[@]}"
 
 cd ..
 

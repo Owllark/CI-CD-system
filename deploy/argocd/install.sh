@@ -10,6 +10,11 @@ handle_error() {
 
 trap 'handle_error $BASH_COMMAND' ERR
 
+if [ ! -e "config.json" ]; then
+     echo "Error: config.json not found"
+     exit 1
+fi
+
 files=("values.yaml" "notifications-cm.yaml" "argocd-application.yaml" "argocd-application-staging.yaml")
 
 DIR_RENDERED="_rendered_"
@@ -38,18 +43,17 @@ ARGOCD_PASSWORD=$(kubectl get secret argocd-initial-admin-secret  -o jsonpath="{
 echo "credentials: " $ARGOCD_USERNAME $ARGOCD_PASSWORD
 echo $ARGOCD_USERNAME $ARGOCD_PASSWORD > argocd-credentials
 
-kubectl delete secret argocd-initial-admin-secret
-
 ARGOCD_POD_NAME="argocd-application-controller-0"
 ARGOCD_URL="http://argocd-server.argocd.svc"
 
 REMOTE_DIR="/home/argocd"
-kubectl cp "$REPO_PRIVATE_KEY_FILE" "$ARGOCD_POD_NAME:$REMOTE_DIR/"
+KEY_FILENAME="github.ssh"
+kubectl cp "$REPO_PRIVATE_KEY_FILE" "$ARGOCD_POD_NAME:$REMOTE_DIR/$KEY_FILENAME"
 
 
 kubectl exec -it "$ARGOCD_POD_NAME" -- /bin/sh -c "
   argocd login $ARGOCD_URL --core --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure
-  argocd repo add $REPO_URL --insecure-ignore-host-key --ssh-private-key-path $REMOTE_DIR/$REPO_PRIVATE_KEY_FILE
+  argocd repo add $REPO_URL --insecure-ignore-host-key --ssh-private-key-path $REMOTE_DIR/$KEY_FILENAME
 "
 
 kubectl delete secret argocd-notifications-secret 
@@ -63,5 +67,3 @@ kubectl apply -f $DIR_RENDERED/argocd-application.yaml
 kubectl apply -f $DIR_RENDERED/argocd-application-staging.yaml
 
 echo "ArgoCD installed successfully!"
-
-utils_delete_rendered_files $DIR_RENDERED "${files[@]}"

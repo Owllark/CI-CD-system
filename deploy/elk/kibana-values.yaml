@@ -10,17 +10,13 @@ resources:
     memory: "1Gi"
     cpu: "1" 
 
-kibanaConfig:
-  elasticsearchHosts: "http://elasticsearch-master:9200"
-
-  resources:
-  requests:
-    memory: "500Mi"
-    cpu: "0.5"
-  limits:
-    memory: "1Gi"
-    cpu: "1" 
-
+readinessProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 3
+  timeoutSeconds: 5
+  
 kibanaConfig:
   elasticsearchHosts: "http://elasticsearch-master:9200"
 
@@ -31,10 +27,10 @@ ingress:
   ingressClassName: "nginx"
   tls:
     - hosts:
-      - {{ .Values.hostname }}
+      - <{elk.hostname}>
       secretName: elk-certificate-tls
   hosts:
-    - {{ .Values.hostname }}
+    - <{elk.hostname}>
   path: /
   pathtype: "Prefix"
 

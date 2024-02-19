@@ -44,7 +44,10 @@ utils_substitute_placeholders() {
     for placeholder in $(grep -o '<{[^>]*}>' "$output_file"); do
       key="${placeholder:2:-2}"  # Remove <{}> from the placeholder
       value="${params_arr[$key]}"
-
+      if [[ "${key:0:1}" == "/" ]]; then
+          sed -i "s|$placeholder|${placeholder:3:-2}|g" "$output_file"
+          continue
+      fi
       if [ -n "$value" ]; then
         sed -i "s|$placeholder|$value|g" "$output_file"
       else
