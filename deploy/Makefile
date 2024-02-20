@@ -39,5 +39,5 @@ install_dependencies_debian: preinstall/install_dependencies_debian.sh
 	(cd preinstall && bash install_dependencies_debian.sh)
 
 terraform: terraform/config/install.sh
-	@echo "Installing ingress-controller.."
+	@echo "Running terraform configuration.."
 	(cd terraform/config && bash install.sh)
