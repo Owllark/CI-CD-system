@@ -4,7 +4,7 @@
 
 install: preinstall jenkins elk argocd 
 
-preinstall: install_dependencies_debian terraform ingress_controller preinstall_general provide_config provide_secrets
+preinstall: terraform ingress_controller preinstall_general provide_config provide_secrets
 
 preinstall_general: preinstall/preinstall_general.sh
 	@echo "Preinstalling actions"

@@ -8,6 +8,10 @@ jq installed
 
 If you want to install dependencies automatically, for Debian system you can run "make install_dependecies_debian"
 
+Automatic installation includes the following steps: running Terraform configuration, 
+preinstall actions such as creating an ingress controller, issuers, providing parameters 
+and secrets in the required locations,and deploying Jenkins, ELK, and ArgoCD
+
 SECRETS:
 
 Before commencing the automatic installation, you should provide necessary secrets.
